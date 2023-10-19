@@ -1,0 +1,3 @@
+/Users/yaohua/CLionProjects/learn_c++/build/CMakeFiles/learn_c__.dir
+/Users/yaohua/CLionProjects/learn_c++/build/CMakeFiles/edit_cache.dir
+/Users/yaohua/CLionProjects/learn_c++/build/CMakeFiles/rebuild_cache.dir

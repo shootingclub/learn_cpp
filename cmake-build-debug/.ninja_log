@@ -1,0 +1,27 @@
+# ninja log v5
+1443	1456	1697705508006683000	lib/libgtest_main.a	33a43d6754eb4446
+1411	1443	1697705507993053000	lib/libgtest.a	f379f36e1844acf5
+2	208	1697713024904395499	module/CMakeFiles/module.dir/Human.cpp.o	8a8dda1f989679d0
+208	278	1697713024975717000	module/libmodule.a	5b462abb2a6056ea
+0	94	1697713076733945458	build.ninja	e3b5d02513f65de4
+1	468	1697712532334624833	test/CMakeFiles/Google_Tests_run.dir/AbsoluteDateTest.cpp.o	c7be3be5040b45e2
+5	371	1697705506918449249	test/lib/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o	d311f447563c395e
+5	1411	1697705507953778749	test/lib/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.o	3adeb87b6683d3e4
+1	23	1697713024719875916	module/CMakeFiles/module.dir/Gregorian.cpp.o	fc42371179dd35
+2	23	1697713024719871999	module/CMakeFiles/module.dir/Julian.cpp.o	fa6e910dd9e6a30d
+230	263	1697703754447943208	learn_c__	aa84e03e56c9e07b
+278	340	1697713025037340916	test/Google_Tests_run	514ac56a1189dade
+2	456	1697712532322343166	test/CMakeFiles/Google_Tests_run.dir/HumanTest.cpp.o	cbd05bacd507069d
+1	471	1697712532338433124	test/CMakeFiles/Google_Tests_run.dir/ConverterTests.cpp.o	3d1622a6c233c926
+0	26	1697713105694342416	module/CMakeFiles/module.dir/Julian.cpp.o	7edbc02569f720f
+0	28	1697713105697236041	module/CMakeFiles/module.dir/Gregorian.cpp.o	2edeadfdbc3ef928
+1	216	1697713105885248124	module/CMakeFiles/module.dir/Human.cpp.o	d5257f15535f3607
+216	237	1697713105908205000	module/libmodule.a	5b462abb2a6056ea
+1	378	1697713106045701499	test/lib/googletest/CMakeFiles/gtest_main.dir/src/gtest_main.cc.o	81d3e0630da1d8ff
+1	391	1697713106060014458	test/CMakeFiles/Google_Tests_run.dir/HumanTest.cpp.o	ce2fc8119f8457cf
+1	430	1697713106097909249	test/CMakeFiles/Google_Tests_run.dir/AbsoluteDateTest.cpp.o	999e5a29e27d49a9
+1	441	1697713106109434499	test/CMakeFiles/Google_Tests_run.dir/ConverterTests.cpp.o	2eacc6b406d7cfcb
+1	1475	1697713107140384291	test/lib/googletest/CMakeFiles/gtest.dir/src/gtest-all.cc.o	7c76b04a4fd3e1f9
+1475	1516	1697713107171930000	lib/libgtest.a	f379f36e1844acf5
+1516	1530	1697713107201387000	lib/libgtest_main.a	33a43d6754eb4446
+1530	1590	1697713107260804083	test/Google_Tests_run	514ac56a1189dade
