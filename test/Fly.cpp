@@ -28,6 +28,7 @@ TEST(FightPlaneTestSuite, HEAP) { // 12/2/2020 -> 737761
     avdance::AirPlane *fp = new avdance::FightPlane();
     if (fp) {
         fp->fly();
+        // 释放空间
         delete fp;
     }
 
@@ -35,6 +36,7 @@ TEST(FightPlaneTestSuite, HEAP) { // 12/2/2020 -> 737761
     avdance::AirPlane *airPlane = new avdance::AirPlane();
     if (airPlane) {
         airPlane->fly();
+        // 释放空间
         delete airPlane;
     }
 
