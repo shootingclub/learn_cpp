@@ -6,7 +6,7 @@
 #include "Julian.h"
 #include "../../../c_workspace/learn_cpp/module/FightPlane.h"
 
-TEST(FightPlaneTestSuite, JICHENG) { // 12/2/2020 -> 737761
+TEST(FightPlaneTestSuite, STACK) { // 12/2/2020 -> 737761
 
     avdance::FightPlane fp;
     fp.setWings(5);
@@ -19,6 +19,24 @@ TEST(FightPlaneTestSuite, JICHENG) { // 12/2/2020 -> 737761
     std::cout << "FightPlane winds: " << fp.getWinds() << std::endl;
     std::cout << "FightPlane wheels: " << fp.getWheels() << std::endl;
     std::cout << "FightPlane weapons: " << fp.getWeapons() << std::endl;
+
+
+}
+
+TEST(FightPlaneTestSuite, HEAP) { // 12/2/2020 -> 737761
+
+    avdance::AirPlane *fp = new avdance::FightPlane();
+    if (fp) {
+        fp->fly();
+        delete fp;
+    }
+
+
+    avdance::AirPlane *airPlane = new avdance::AirPlane();
+    if (airPlane) {
+        airPlane->fly();
+        delete airPlane;
+    }
 
 
 }

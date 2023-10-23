@@ -6,6 +6,7 @@
 #ifndef LEARN_C_AIRPLANE_H
 #define LEARN_C_AIRPLANE_H
 
+#include <iostream>
 
 namespace avdance {
 
@@ -16,6 +17,7 @@ namespace avdance {
             wings = 2;
             wheels = 3;
             engines = 1;
+            std::cout << "AirPlane construction" << std::endl;
         }
 
         ~ AirPlane() {}
@@ -36,7 +38,8 @@ namespace avdance {
         void setEngines(int engines);
 
     public:
-        void fly();
+        // 父类定义虚函数需要子类继承
+        virtual void fly();
 
     private:
         int wings;

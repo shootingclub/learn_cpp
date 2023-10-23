@@ -6,6 +6,7 @@
 #define LEARN_C_FIGHTPLANE_H
 
 #include "AirPlane.h"
+#include <iostream>
 
 namespace avdance {
     class FightPlane : public AirPlane {
@@ -13,15 +14,19 @@ namespace avdance {
     public:
         FightPlane() {
             weapons = 1;
+            std::cout << "FightPlane construction" << std::endl;
         };
 
         ~FightPlane() {};
     public:
-        void setWeapons(int weapons);
+        // 子类继承父类定义虚函数
+        void fly();
 
+    private:
+    public:
         int getWeapons();
 
-        void fly();
+        void setWeapons(int weapons);
 
     private:
         int weapons;

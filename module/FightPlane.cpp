@@ -15,7 +15,8 @@ namespace avdance {
     }
 
     void FightPlane::fly() {
-        std::cout << " this is a fight fly" << std::endl;
+        std::cout << "this is a fight fly" << std::endl;
 
     }
+
 }
