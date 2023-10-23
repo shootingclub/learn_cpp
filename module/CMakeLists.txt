@@ -6,6 +6,7 @@ set(HEADER_FILES
         Human.h
         AirPlane.h
         FightPlane.h
+        Server.h
 )
 
 set(SOURCE_FILES
@@ -14,6 +15,7 @@ set(SOURCE_FILES
         Human.cpp
         AirPlane.cpp
         FightPlane.cpp
+        Server.cpp
 
 )
 

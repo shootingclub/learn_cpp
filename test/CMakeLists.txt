@@ -8,6 +8,7 @@ add_executable(Google_Tests_run
         AbsoluteDateTest.cpp
         HumanTest.cpp
         Fly.cpp
+        Server.cpp
 )
 
 # linking Google_Tests_run with DateConverter_lib which will be tested
