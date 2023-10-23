@@ -1,4 +1,4 @@
-# Install script for directory: /Users/yaohua/Downloads/learn_cpp/module
+# Install script for directory: /Users/yaohua/c_workspace/learn_cpp/module
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

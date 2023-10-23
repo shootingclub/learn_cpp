@@ -1,4 +1,4 @@
-# Install script for directory: /Users/yaohua/Downloads/learn_cpp/test
+# Install script for directory: /Users/yaohua/c_workspace/learn_cpp/test
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,6 +39,6 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/Users/yaohua/Downloads/learn_cpp/cmake-build-debug/test/lib/cmake_install.cmake")
+  include("/Users/yaohua/c_workspace/learn_cpp/cmake-build-debug/test/lib/cmake_install.cmake")
 endif()
 

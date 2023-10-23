@@ -1,4 +1,4 @@
-# Install script for directory: /Users/yaohua/Downloads/learn_cpp
+# Install script for directory: /Users/yaohua/c_workspace/learn_cpp
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,12 +39,12 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/Users/yaohua/Downloads/learn_cpp/cmake-build-debug/module/cmake_install.cmake")
+  include("/Users/yaohua/c_workspace/learn_cpp/cmake-build-debug/module/cmake_install.cmake")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/Users/yaohua/Downloads/learn_cpp/cmake-build-debug/test/cmake_install.cmake")
+  include("/Users/yaohua/c_workspace/learn_cpp/cmake-build-debug/test/cmake_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -55,5 +55,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/Users/yaohua/Downloads/learn_cpp/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/Users/yaohua/c_workspace/learn_cpp/cmake-build-debug/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
