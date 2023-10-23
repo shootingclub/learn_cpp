@@ -9,6 +9,9 @@ add_executable(Google_Tests_run
         HumanTest.cpp
         Fly.cpp
         Server.cpp
+        Signal.cpp
+        Fork.cpp
+        Daemon.cpp
 )
 
 # linking Google_Tests_run with DateConverter_lib which will be tested
