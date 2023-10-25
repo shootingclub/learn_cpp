@@ -12,6 +12,7 @@ add_executable(Google_Tests_run
         Signal.cpp
         Fork.cpp
         Daemon.cpp
+        ServerClient.cpp
 )
 
 # linking Google_Tests_run with DateConverter_lib which will be tested

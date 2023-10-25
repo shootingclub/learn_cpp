@@ -161,6 +161,13 @@ build module/CMakeFiles/module.dir/Server.cpp.o: CXX_COMPILER__module_unscanned_
   OBJECT_DIR = module/CMakeFiles/module.dir
   OBJECT_FILE_DIR = module/CMakeFiles/module.dir
 
+build module/CMakeFiles/module.dir/ServerClient.cpp.o: CXX_COMPILER__module_unscanned_Debug /Users/yaohua/c_workspace/learn_cpp/module/ServerClient.cpp || cmake_object_order_depends_target_module
+  DEP_FILE = module/CMakeFiles/module.dir/ServerClient.cpp.o.d
+  FLAGS = -g -std=gnu++14 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.0.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/yaohua/c_workspace/learn_cpp/module
+  OBJECT_DIR = module/CMakeFiles/module.dir
+  OBJECT_FILE_DIR = module/CMakeFiles/module.dir
+
 
 # =============================================================================
 # Link build statements for STATIC_LIBRARY target module
@@ -169,7 +176,7 @@ build module/CMakeFiles/module.dir/Server.cpp.o: CXX_COMPILER__module_unscanned_
 #############################################
 # Link the static library module/libmodule.a
 
-build module/libmodule.a: CXX_STATIC_LIBRARY_LINKER__module_Debug module/CMakeFiles/module.dir/Gregorian.cpp.o module/CMakeFiles/module.dir/Julian.cpp.o module/CMakeFiles/module.dir/Human.cpp.o module/CMakeFiles/module.dir/AirPlane.cpp.o module/CMakeFiles/module.dir/FightPlane.cpp.o module/CMakeFiles/module.dir/Server.cpp.o
+build module/libmodule.a: CXX_STATIC_LIBRARY_LINKER__module_Debug module/CMakeFiles/module.dir/Gregorian.cpp.o module/CMakeFiles/module.dir/Julian.cpp.o module/CMakeFiles/module.dir/Human.cpp.o module/CMakeFiles/module.dir/AirPlane.cpp.o module/CMakeFiles/module.dir/FightPlane.cpp.o module/CMakeFiles/module.dir/Server.cpp.o module/CMakeFiles/module.dir/ServerClient.cpp.o
   ARCH_FLAGS = -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.0.sdk
   LANGUAGE_COMPILE_FLAGS = -g
   OBJECT_DIR = module/CMakeFiles/module.dir
@@ -313,6 +320,13 @@ build test/CMakeFiles/Google_Tests_run.dir/Daemon.cpp.o: CXX_COMPILER__Google_Te
   OBJECT_DIR = test/CMakeFiles/Google_Tests_run.dir
   OBJECT_FILE_DIR = test/CMakeFiles/Google_Tests_run.dir
 
+build test/CMakeFiles/Google_Tests_run.dir/ServerClient.cpp.o: CXX_COMPILER__Google_Tests_run_unscanned_Debug /Users/yaohua/c_workspace/learn_cpp/test/ServerClient.cpp || cmake_object_order_depends_target_Google_Tests_run
+  DEP_FILE = test/CMakeFiles/Google_Tests_run.dir/ServerClient.cpp.o.d
+  FLAGS = -g -std=gnu++14 -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.0.sdk -fcolor-diagnostics
+  INCLUDES = -I/Users/yaohua/c_workspace/learn_cpp/module -isystem /Users/yaohua/c_workspace/learn_cpp/test/lib/googletest/include -isystem /Users/yaohua/c_workspace/learn_cpp/test/lib/googletest
+  OBJECT_DIR = test/CMakeFiles/Google_Tests_run.dir
+  OBJECT_FILE_DIR = test/CMakeFiles/Google_Tests_run.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target Google_Tests_run
@@ -321,7 +335,7 @@ build test/CMakeFiles/Google_Tests_run.dir/Daemon.cpp.o: CXX_COMPILER__Google_Te
 #############################################
 # Link the executable test/Google_Tests_run
 
-build test/Google_Tests_run: CXX_EXECUTABLE_LINKER__Google_Tests_run_Debug test/CMakeFiles/Google_Tests_run.dir/ConverterTests.cpp.o test/CMakeFiles/Google_Tests_run.dir/AbsoluteDateTest.cpp.o test/CMakeFiles/Google_Tests_run.dir/HumanTest.cpp.o test/CMakeFiles/Google_Tests_run.dir/Fly.cpp.o test/CMakeFiles/Google_Tests_run.dir/Server.cpp.o test/CMakeFiles/Google_Tests_run.dir/Signal.cpp.o test/CMakeFiles/Google_Tests_run.dir/Fork.cpp.o test/CMakeFiles/Google_Tests_run.dir/Daemon.cpp.o | module/libmodule.a lib/libgtest.a lib/libgtest_main.a lib/libgtest.a || lib/libgtest.a lib/libgtest_main.a module/libmodule.a
+build test/Google_Tests_run: CXX_EXECUTABLE_LINKER__Google_Tests_run_Debug test/CMakeFiles/Google_Tests_run.dir/ConverterTests.cpp.o test/CMakeFiles/Google_Tests_run.dir/AbsoluteDateTest.cpp.o test/CMakeFiles/Google_Tests_run.dir/HumanTest.cpp.o test/CMakeFiles/Google_Tests_run.dir/Fly.cpp.o test/CMakeFiles/Google_Tests_run.dir/Server.cpp.o test/CMakeFiles/Google_Tests_run.dir/Signal.cpp.o test/CMakeFiles/Google_Tests_run.dir/Fork.cpp.o test/CMakeFiles/Google_Tests_run.dir/Daemon.cpp.o test/CMakeFiles/Google_Tests_run.dir/ServerClient.cpp.o | module/libmodule.a lib/libgtest.a lib/libgtest_main.a lib/libgtest.a || lib/libgtest.a lib/libgtest_main.a module/libmodule.a
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.0.sdk
   LINK_LIBRARIES = module/libmodule.a  lib/libgtest.a  lib/libgtest_main.a  lib/libgtest.a
   OBJECT_DIR = test/CMakeFiles/Google_Tests_run.dir

@@ -7,11 +7,7 @@
 #include "Server.h"
 #include <iostream>
 
-TEST(ServerTestSuite, ExampleDate) {
-
-    avdance::Server *server = new avdance::Server();
-    if (server) {
-        server->run();
-    }
-
+TEST(ServerTestSuite, TCP_SERVER) {
+    avdance::Server server;
+    server.RunTcp();
 }

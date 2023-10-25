@@ -13,7 +13,9 @@ namespace avdance {
         ~Server();
 
     public:
-        void run();
+        void RunTcp();
+
+        void RunUdp();
 
 
     };
