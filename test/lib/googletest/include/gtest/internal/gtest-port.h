@@ -1925,7 +1925,7 @@ class GTEST_API_ ThreadLocal {
 
 #endif  // GTEST_IS_THREADSAFE
 
-// Returns the number of threads running in the process, or 0 to indicate that
+// Returns the number of threads running in the lib_event_server, or 0 to indicate that
 // we cannot detect it.
 GTEST_API_ size_t GetThreadCount();
 

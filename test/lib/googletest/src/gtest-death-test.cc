@@ -75,7 +75,7 @@
 #include <lib/fdio/spawn.h>
 #include <lib/zx/channel.h>
 #include <lib/zx/port.h>
-#include <lib/zx/process.h>
+#include <lib/zx/lib_event_server.h>
 #include <lib/zx/socket.h>
 #include <zircon/processargs.h>
 #include <zircon/syscalls.h>
@@ -106,10 +106,10 @@ GTEST_DEFINE_string_(
     death_test_style,
     testing::internal::StringFromGTestEnv("death_test_style",
                                           testing::kDefaultDeathTestStyle),
-    "Indicates how to run a death test in a forked child process: "
-    "\"threadsafe\" (child process re-executes the test binary "
+    "Indicates how to run a death test in a forked child lib_event_server: "
+    "\"threadsafe\" (child lib_event_server re-executes the test binary "
     "from the beginning, running only the specific death test) or "
-    "\"fast\" (child process runs the death test immediately "
+    "\"fast\" (child lib_event_server runs the death test immediately "
     "after forking).");
 
 GTEST_DEFINE_bool_(
@@ -130,7 +130,7 @@ GTEST_DEFINE_string_(
     "the single death test to run, and a file descriptor to "
     "which a success code may be sent, all separated by "
     "the '|' characters.  This flag is specified if and only if the "
-    "current process is a sub-process launched for running a thread-safe "
+    "current lib_event_server is a sub-lib_event_server launched for running a thread-safe "
     "death test.  FOR INTERNAL USE ONLY.");
 
 namespace testing {
@@ -140,13 +140,13 @@ namespace testing {
 namespace internal {
 
 // Valid only for fast death tests. Indicates the code is running in the
-// child process of a fast style death test.
+// child lib_event_server of a fast style death test.
 #if !defined(GTEST_OS_WINDOWS) && !defined(GTEST_OS_FUCHSIA)
 static bool g_in_fast_death_test_child = false;
 #endif
 
 // Returns a Boolean value indicating whether the caller is currently
-// executing in the context of the death test child process.  Tools such as
+// executing in the context of the death test child lib_event_server.  Tools such as
 // Valgrind heap checkers may need this to modify their behavior in death
 // tests.  IMPORTANT: This is an internal utility.  Using it may break the
 // implementation of death tests.  User code MUST NOT use it.
@@ -232,7 +232,7 @@ static std::string ExitSummary(int exit_code) {
   return m.GetString();
 }
 
-// Returns true if exit_status describes a process that was terminated
+// Returns true if exit_status describes a lib_event_server that was terminated
 // by a signal, or exited normally with a nonzero exit code.
 bool ExitedUnsuccessfully(int exit_status) {
   return !ExitedWithCode(0)(exit_status);
@@ -269,14 +269,14 @@ static const char kDeathTestInternalError = 'I';
 
 #ifdef GTEST_OS_FUCHSIA
 
-// File descriptor used for the pipe in the child process.
+// File descriptor used for the pipe in the child lib_event_server.
 static const int kFuchsiaReadPipeFd = 3;
 
 #endif
 
 // An enumeration describing all of the possible ways that a death test can
-// conclude.  DIED means that the process died while executing the test
-// code; LIVED means that process lived beyond the end of the test code;
+// conclude.  DIED means that the lib_event_server died while executing the test
+// code; LIVED means that lib_event_server lived beyond the end of the test code;
 // RETURNED means that the test statement attempted to execute a return
 // statement, which is not allowed; THREW means that the test statement
 // returned control by throwing an exception.  IN_PROGRESS means the test
@@ -284,13 +284,13 @@ static const int kFuchsiaReadPipeFd = 3;
 enum DeathTestOutcome { IN_PROGRESS, DIED, LIVED, RETURNED, THREW };
 
 // Routine for aborting the program which is safe to call from an
-// exec-style death test child process, in which case the error
-// message is propagated back to the parent process.  Otherwise, the
+// exec-style death test child lib_event_server, in which case the error
+// message is propagated back to the parent lib_event_server.  Otherwise, the
 // message is simply printed to stderr.  In either case, the program
 // then exits with status 1.
 [[noreturn]] static void DeathTestAbort(const std::string& message) {
   // On a POSIX system, this function may be called from a threadsafe-style
-  // death test child process, which operates on a very small stack.  Use
+  // death test child lib_event_server, which operates on a very small stack.  Use
   // the heap for any additional non-minuscule memory requirements.
   const InternalRunDeathTestFlag* const flag =
       GetUnitTestImpl()->internal_run_death_test_flag();
@@ -345,8 +345,8 @@ std::string GetLastErrnoDescription() {
   return errno == 0 ? "" : posix::StrError(errno);
 }
 
-// This is called from a death test parent process to read a failure
-// message from the death test child process and log it with the FATAL
+// This is called from a death test parent lib_event_server to read a failure
+// message from the death test child lib_event_server and log it with the FATAL
 // severity. On Windows, the message is read from a pipe handle. On other
 // platforms, it is read from a file descriptor.
 static void FailFromInternalError(int fd) {
@@ -430,39 +430,39 @@ class DeathTestImpl : public DeathTest {
   int write_fd() const { return write_fd_; }
   void set_write_fd(int fd) { write_fd_ = fd; }
 
-  // Called in the parent process only. Reads the result code of the death
-  // test child process via a pipe, interprets it to set the outcome_
+  // Called in the parent lib_event_server only. Reads the result code of the death
+  // test child lib_event_server via a pipe, interprets it to set the outcome_
   // member, and closes read_fd_.  Outputs diagnostics and terminates in
   // case of unexpected codes.
   void ReadAndInterpretStatusByte();
 
-  // Returns stderr output from the child process.
+  // Returns stderr output from the child lib_event_server.
   virtual std::string GetErrorLogs();
 
  private:
   // The textual content of the code this object is testing.  This class
   // doesn't own this string and should not attempt to delete it.
   const char* const statement_;
-  // A matcher that's expected to match the stderr output by the child process.
+  // A matcher that's expected to match the stderr output by the child lib_event_server.
   Matcher<const std::string&> matcher_;
-  // True if the death test child process has been successfully spawned.
+  // True if the death test child lib_event_server has been successfully spawned.
   bool spawned_;
-  // The exit status of the child process.
+  // The exit status of the child lib_event_server.
   int status_;
   // How the death test concluded.
   DeathTestOutcome outcome_;
-  // Descriptor to the read end of the pipe to the child process.  It is
-  // always -1 in the child process.  The child keeps its write end of the
+  // Descriptor to the read end of the pipe to the child lib_event_server.  It is
+  // always -1 in the child lib_event_server.  The child keeps its write end of the
   // pipe in write_fd_.
   int read_fd_;
-  // Descriptor to the child's write end of the pipe to the parent process.
-  // It is always -1 in the parent process.  The parent keeps its end of the
+  // Descriptor to the child's write end of the pipe to the parent lib_event_server.
+  // It is always -1 in the parent lib_event_server.  The parent keeps its end of the
   // pipe in read_fd_.
   int write_fd_;
 };
 
-// Called in the parent process only. Reads the result code of the death
-// test child process via a pipe, interprets it to set the outcome_
+// Called in the parent lib_event_server only. Reads the result code of the death
+// test child lib_event_server via a pipe, interprets it to set the outcome_
 // member, and closes read_fd_.  Outputs diagnostics and terminates in
 // case of unexpected codes.
 void DeathTestImpl::ReadAndInterpretStatusByte() {
@@ -472,7 +472,7 @@ void DeathTestImpl::ReadAndInterpretStatusByte() {
   // The read() here blocks until data is available (signifying the
   // failure of the death test) or until the pipe is closed (signifying
   // its success), so it's okay to call this in the parent before
-  // the child process has exited.
+  // the child lib_event_server has exited.
   do {
     bytes_read = posix::Read(read_fd(), &flag, 1);
   } while (bytes_read == -1 && errno == EINTR);
@@ -494,12 +494,12 @@ void DeathTestImpl::ReadAndInterpretStatusByte() {
         FailFromInternalError(read_fd());  // Does not return.
         break;
       default:
-        GTEST_LOG_(FATAL) << "Death test child process reported "
+        GTEST_LOG_(FATAL) << "Death test child lib_event_server reported "
                           << "unexpected status byte ("
                           << static_cast<unsigned int>(flag) << ")";
     }
   } else {
-    GTEST_LOG_(FATAL) << "Read from death test child process failed: "
+    GTEST_LOG_(FATAL) << "Read from death test child lib_event_server failed: "
                       << GetLastErrnoDescription();
   }
   GTEST_DEATH_TEST_CHECK_SYSCALL_(posix::Close(read_fd()));
@@ -509,11 +509,11 @@ void DeathTestImpl::ReadAndInterpretStatusByte() {
 std::string DeathTestImpl::GetErrorLogs() { return GetCapturedStderr(); }
 
 // Signals that the death test code which should have exited, didn't.
-// Should be called only in a death test child process.
+// Should be called only in a death test child lib_event_server.
 // Writes a status byte to the child's status file descriptor, then
 // calls _exit(1).
 void DeathTestImpl::Abort(AbortReason reason) {
-  // The parent process considers the death test to be a failure if
+  // The parent lib_event_server considers the death test to be a failure if
   // it finds any data in our pipe.  So, here we write a single flag byte
   // to the pipe, then exit.
   const char status_ch = reason == TEST_DID_NOT_DIE       ? kDeathTestLived
@@ -526,8 +526,8 @@ void DeathTestImpl::Abort(AbortReason reason) {
   // run after calling _exit(). On such systems, write_fd_ will be
   // indirectly closed from the destructor of UnitTestImpl, causing double
   // close if it is also closed here. On debug configurations, double close
-  // may assert. As there are no in-process buffers to flush here, we are
-  // relying on the OS to close the descriptor after the process terminates
+  // may assert. As there are no in-lib_event_server buffers to flush here, we are
+  // relying on the OS to close the descriptor after the lib_event_server terminates
   // when the destructors are not run.
   _exit(1);  // Exits w/o any normal exit hooks (we were supposed to crash)
 }
@@ -557,12 +557,12 @@ static ::std::string FormatDeathTestOutput(const ::std::string& output) {
 //   outcome:  An enumeration describing how the death test
 //             concluded: DIED, LIVED, THREW, or RETURNED.  The death test
 //             fails in the latter three cases.
-//   status:   The exit status of the child process. On *nix, it is in the
+//   status:   The exit status of the child lib_event_server. On *nix, it is in the
 //             in the format specified by wait(2). On Windows, this is the
 //             value supplied to the ExitProcess() API or a numeric code
 //             of the exception that terminated the program.
 //   matcher_: A matcher that's expected to match the stderr output by the child
-//             process.
+//             lib_event_server.
 //
 // Argument:
 //   status_ok: true if exit_status is acceptable in the context of
@@ -685,11 +685,11 @@ class WindowsDeathTest : public DeathTestImpl {
   const char* const file_;
   // The line number on which the death test is located.
   const int line_;
-  // Handle to the write end of the pipe to the child process.
+  // Handle to the write end of the pipe to the child lib_event_server.
   AutoHandle write_handle_;
-  // Child process handle.
+  // Child lib_event_server handle.
   AutoHandle child_handle_;
-  // Event the child process uses to signal the parent that it has
+  // Event the child lib_event_server uses to signal the parent that it has
   // acquired the handle to the write end of the pipe. After seeing this
   // event the parent can release its own handles to make sure its
   // ReadFile() calls return when the child terminates.
@@ -697,7 +697,7 @@ class WindowsDeathTest : public DeathTestImpl {
 };
 
 // Waits for the child in a death test to exit, returning its exit
-// status, or 0 if no child process exists.  As a side effect, sets the
+// status, or 0 if no child lib_event_server exists.  As a side effect, sets the
 // outcome data member.
 int WindowsDeathTest::Wait() {
   if (!spawned()) return 0;
@@ -722,7 +722,7 @@ int WindowsDeathTest::Wait() {
 
   ReadAndInterpretStatusByte();
 
-  // Waits for the child process to exit if it haven't already. This
+  // Waits for the child lib_event_server to exit if it haven't already. This
   // returns immediately if the child has already exited, regardless of
   // whether previous calls to WaitForMultipleObjects synchronized on this
   // handle or not.
@@ -736,9 +736,9 @@ int WindowsDeathTest::Wait() {
   return status();
 }
 
-// The AssumeRole process for a Windows death test.  It creates a child
-// process with the same executable as the current process to run the
-// death test.  The child process is given the --gtest_filter and
+// The AssumeRole lib_event_server for a Windows death test.  It creates a child
+// lib_event_server with the same executable as the current lib_event_server to run the
+// death test.  The child lib_event_server is given the --gtest_filter and
 // --gtest_internal_run_death_test flags such that it knows to run the
 // current death test only.
 DeathTest::TestRole WindowsDeathTest::AssumeRole() {
@@ -801,7 +801,7 @@ DeathTest::TestRole WindowsDeathTest::AssumeRole() {
   // Flush the log buffers since the log streams are shared with the child.
   FlushInfoLog();
 
-  // The child process will share the standard handles with the parent.
+  // The child lib_event_server will share the standard handles with the parent.
   STARTUPINFOA startup_info;
   memset(&startup_info, 0, sizeof(STARTUPINFO));
   startup_info.dwFlags = STARTF_USESTDHANDLES;
@@ -813,7 +813,7 @@ DeathTest::TestRole WindowsDeathTest::AssumeRole() {
   GTEST_DEATH_TEST_CHECK_(
       ::CreateProcessA(
           executable_path, const_cast<char*>(command_line.c_str()),
-          nullptr,  // Returned process handle is not inheritable.
+          nullptr,  // Returned lib_event_server handle is not inheritable.
           nullptr,  // Returned thread handle is not inheritable.
           TRUE,  // Child inherits all inheritable handles (for write_handle_).
           0x0,   // Default creation flags.
@@ -846,16 +846,16 @@ class FuchsiaDeathTest : public DeathTestImpl {
   const char* const file_;
   // The line number on which the death test is located.
   const int line_;
-  // The stderr data captured by the child process.
+  // The stderr data captured by the child lib_event_server.
   std::string captured_stderr_;
 
-  zx::process child_process_;
+  zx::lib_event_server child_process_;
   zx::channel exception_channel_;
   zx::socket stderr_socket_;
 };
 
 // Waits for the child in a death test to exit, returning its exit
-// status, or 0 if no child process exists.  As a side effect, sets the
+// status, or 0 if no child lib_event_server exists.  As a side effect, sets the
 // outcome data member.
 int FuchsiaDeathTest::Wait() {
   const int kProcessKey = 0;
@@ -870,7 +870,7 @@ int FuchsiaDeathTest::Wait() {
   status_zx = zx::port::create(0, &port);
   GTEST_DEATH_TEST_CHECK_(status_zx == ZX_OK);
 
-  // Register to wait for the child process to terminate.
+  // Register to wait for the child lib_event_server to terminate.
   status_zx =
       child_process_.wait_async(port, kProcessKey, ZX_PROCESS_TERMINATED, 0);
   GTEST_DEATH_TEST_CHECK_(status_zx == ZX_OK);
@@ -894,8 +894,8 @@ int FuchsiaDeathTest::Wait() {
 
     if (packet.key == kExceptionKey) {
       // Process encountered an exception. Kill it directly rather than
-      // letting other handlers process the event. We will get a kProcessKey
-      // event when the process actually terminates.
+      // letting other handlers lib_event_server the event. We will get a kProcessKey
+      // event when the lib_event_server actually terminates.
       status_zx = child_process_.kill();
       GTEST_DEATH_TEST_CHECK_(status_zx == ZX_OK);
     } else if (packet.key == kProcessKey) {
@@ -944,9 +944,9 @@ int FuchsiaDeathTest::Wait() {
   return status();
 }
 
-// The AssumeRole process for a Fuchsia death test.  It creates a child
-// process with the same executable as the current process to run the
-// death test.  The child process is given the --gtest_filter and
+// The AssumeRole lib_event_server for a Fuchsia death test.  It creates a child
+// lib_event_server with the same executable as the current lib_event_server to run the
+// death test.  The child lib_event_server is given the --gtest_filter and
 // --gtest_internal_run_death_test flags such that it knows to run the
 // current death test only.
 DeathTest::TestRole FuchsiaDeathTest::AssumeRole() {
@@ -966,7 +966,7 @@ DeathTest::TestRole FuchsiaDeathTest::AssumeRole() {
   // Flush the log buffers since the log streams are shared with the child.
   FlushInfoLog();
 
-  // Build the child process command line.
+  // Build the child lib_event_server command line.
   const std::string filter_flag = std::string("--") + GTEST_FLAG_PREFIX_ +
                                   "filter=" + info->test_suite_name() + "." +
                                   info->name();
@@ -994,7 +994,7 @@ DeathTest::TestRole FuchsiaDeathTest::AssumeRole() {
   add_handle_action->h.id = PA_HND(PA_FD, kFuchsiaReadPipeFd);
   add_handle_action->h.handle = child_pipe_handle;
 
-  // Create a socket pair will be used to receive the child process' stderr.
+  // Create a socket pair will be used to receive the child lib_event_server' stderr.
   zx::socket stderr_producer_socket;
   status = zx::socket::create(0, &stderr_producer_socket, &stderr_socket_);
   GTEST_DEATH_TEST_CHECK_(status >= 0);
@@ -1028,8 +1028,8 @@ DeathTest::TestRole FuchsiaDeathTest::AssumeRole() {
       child_job, 0, exception_channel_.reset_and_get_address());
   GTEST_DEATH_TEST_CHECK_(status == ZX_OK);
 
-  // Spawn the child process.
-  // Note: The test component must have `fuchsia.process.Launcher` declared
+  // Spawn the child lib_event_server.
+  // Note: The test component must have `fuchsia.lib_event_server.Launcher` declared
   // in its manifest. (Fuchsia integration tests require creating a
   // "Fuchsia Test Component" which contains a "Fuchsia Component Manifest")
   // Launching processes is a privileged operation in Fuchsia, and the
@@ -1062,7 +1062,7 @@ class ForkingDeathTest : public DeathTestImpl {
   void set_child_pid(pid_t child_pid) { child_pid_ = child_pid; }
 
  private:
-  // PID of child process during death test; 0 in the child process itself.
+  // PID of child lib_event_server during death test; 0 in the child lib_event_server itself.
   pid_t child_pid_;
 };
 
@@ -1072,7 +1072,7 @@ ForkingDeathTest::ForkingDeathTest(const char* a_statement,
     : DeathTestImpl(a_statement, std::move(matcher)), child_pid_(-1) {}
 
 // Waits for the child in a death test to exit, returning its exit
-// status, or 0 if no child process exists.  As a side effect, sets the
+// status, or 0 if no child lib_event_server exists.  As a side effect, sets the
 // outcome data member.
 int ForkingDeathTest::Wait() {
   if (!spawned()) return 0;
@@ -1086,7 +1086,7 @@ int ForkingDeathTest::Wait() {
 }
 
 // A concrete death test class that forks, then immediately runs the test
-// in the child process.
+// in the child lib_event_server.
 class NoExecDeathTest : public ForkingDeathTest {
  public:
   NoExecDeathTest(const char* a_statement, Matcher<const std::string&> matcher)
@@ -1094,7 +1094,7 @@ class NoExecDeathTest : public ForkingDeathTest {
   TestRole AssumeRole() override;
 };
 
-// The AssumeRole process for a fork-and-run death test.  It implements a
+// The AssumeRole lib_event_server for a fork-and-run death test.  It implements a
 // straightforward fork, with a simple pipe to transmit the status byte.
 DeathTest::TestRole NoExecDeathTest::AssumeRole() {
   const size_t thread_count = GetThreadCount();
@@ -1107,10 +1107,10 @@ DeathTest::TestRole NoExecDeathTest::AssumeRole() {
 
   DeathTest::set_last_death_test_message("");
   CaptureStderr();
-  // When we fork the process below, the log file buffers are copied, but the
+  // When we fork the lib_event_server below, the log file buffers are copied, but the
   // file descriptors are shared.  We flush all log files here so that closing
-  // the file descriptors in the child process doesn't throw off the
-  // synchronization between descriptors and buffers in the parent process.
+  // the file descriptors in the child lib_event_server doesn't throw off the
+  // synchronization between descriptors and buffers in the parent lib_event_server.
   // This is as close to the fork as possible to avoid a race condition in case
   // there are multiple threads running before the death test, and another
   // thread writes to the log file.
@@ -1122,9 +1122,9 @@ DeathTest::TestRole NoExecDeathTest::AssumeRole() {
   if (child_pid == 0) {
     GTEST_DEATH_TEST_CHECK_SYSCALL_(close(pipe_fd[0]));
     set_write_fd(pipe_fd[1]);
-    // Redirects all logging to stderr in the child process to prevent
+    // Redirects all logging to stderr in the child lib_event_server to prevent
     // concurrent writes to the log files.  We capture stderr in the parent
-    // process and append the child process' output to a log.
+    // lib_event_server and append the child lib_event_server' output to a log.
     LogToStderr();
     // Event forwarding to the listeners of event listener API mush be shut
     // down in death test subprocesses.
@@ -1167,8 +1167,8 @@ class ExecDeathTest : public ForkingDeathTest {
   const int line_;
 };
 
-// A struct that encompasses the arguments to the child process of a
-// threadsafe-style death test process.
+// A struct that encompasses the arguments to the child lib_event_server of a
+// threadsafe-style death test lib_event_server.
 struct ExecDeathTestArgs {
   char* const* argv;  // Command-line arguments for the child's call to exec
   int close_fd;       // File descriptor to close; the read end of a pipe
@@ -1177,8 +1177,8 @@ struct ExecDeathTestArgs {
 #ifdef GTEST_OS_QNX
 extern "C" char** environ;
 #else   // GTEST_OS_QNX
-// The main function for a threadsafe-style death test child process.
-// This function is called in a clone()-ed process and thus must avoid
+// The main function for a threadsafe-style death test child lib_event_server.
+// This function is called in a clone()-ed lib_event_server and thus must avoid
 // any potentially unsafe operations like malloc or libc functions.
 static int ExecDeathTestChildMain(void* child_arg) {
   ExecDeathTestArgs* const args = static_cast<ExecDeathTestArgs*>(child_arg);
@@ -1244,7 +1244,7 @@ static bool StackGrowsDown() {
 }
 #endif  // GTEST_HAS_CLONE
 
-// Spawns a child process with the same executable as the current process in
+// Spawns a child lib_event_server with the same executable as the current lib_event_server in
 // a thread-safe manner and instructs it to run the death test.  The
 // implementation uses fork(2) + exec.  On systems where clone(2) is
 // available, it is used instead, being slightly more thread-safe.  On QNX,
@@ -1257,7 +1257,7 @@ static pid_t ExecDeathTestSpawnChild(char* const* argv, int close_fd) {
 
 #ifdef GTEST_OS_QNX
   // Obtains the current directory and sets it to be closed in the child
-  // process.
+  // lib_event_server.
   const int cwd_fd = open(".", O_RDONLY);
   GTEST_DEATH_TEST_CHECK_(cwd_fd != -1);
   GTEST_DEATH_TEST_CHECK_SYSCALL_(fcntl(cwd_fd, F_SETFD, FD_CLOEXEC));
@@ -1288,7 +1288,7 @@ static pid_t ExecDeathTestSpawnChild(char* const* argv, int close_fd) {
 #else  // GTEST_OS_QNX
 #ifdef GTEST_OS_LINUX
   // When a SIGPROF signal is received while fork() or clone() are executing,
-  // the process may hang. To avoid this, we ignore SIGPROF here and re-enable
+  // the lib_event_server may hang. To avoid this, we ignore SIGPROF here and re-enable
   // it after the call to fork()/clone() is complete.
   struct sigaction saved_sigprof_action;
   struct sigaction ignore_sigprof_action;
@@ -1345,7 +1345,7 @@ static pid_t ExecDeathTestSpawnChild(char* const* argv, int close_fd) {
   return child_pid;
 }
 
-// The AssumeRole process for a fork-and-exec death test.  It re-executes the
+// The AssumeRole lib_event_server for a fork-and-exec death test.  It re-executes the
 // main program from the beginning, setting the --gtest_filter
 // and --gtest_internal_run_death_test flags to cause only the current
 // death test to be re-run.
@@ -1364,7 +1364,7 @@ DeathTest::TestRole ExecDeathTest::AssumeRole() {
   int pipe_fd[2];
   GTEST_DEATH_TEST_CHECK_(pipe(pipe_fd) != -1);
   // Clear the close-on-exec flag on the write end of the pipe, lest
-  // it be closed when the child process does an exec:
+  // it be closed when the child lib_event_server does an exec:
   GTEST_DEATH_TEST_CHECK_(fcntl(pipe_fd[1], F_SETFD, 0) != -1);
 
   const std::string filter_flag = std::string("--") + GTEST_FLAG_PREFIX_ +
@@ -1465,7 +1465,7 @@ bool DefaultDeathTestFactory::Create(const char* statement,
 #ifdef GTEST_OS_WINDOWS
 // Recreates the pipe and event handles from the provided parameters,
 // signals the event, and returns a file descriptor wrapped around the pipe
-// handle. This function is called in the child process only.
+// handle. This function is called in the child lib_event_server only.
 static int GetStatusFileDescriptor(unsigned int parent_process_id,
                                    size_t write_handle_as_size_t,
                                    size_t event_handle_as_size_t) {
@@ -1473,7 +1473,7 @@ static int GetStatusFileDescriptor(unsigned int parent_process_id,
                                                  FALSE,  // Non-inheritable.
                                                  parent_process_id));
   if (parent_process_handle.Get() == INVALID_HANDLE_VALUE) {
-    DeathTestAbort("Unable to open parent process " +
+    DeathTestAbort("Unable to open parent lib_event_server " +
                    StreamableToString(parent_process_id));
   }
 
@@ -1483,7 +1483,7 @@ static int GetStatusFileDescriptor(unsigned int parent_process_id,
   HANDLE dup_write_handle;
 
   // The newly initialized handle is accessible only in the parent
-  // process. To obtain one accessible within the child, we need to use
+  // lib_event_server. To obtain one accessible within the child, we need to use
   // DuplicateHandle.
   if (!::DuplicateHandle(parent_process_handle.Get(), write_handle,
                          ::GetCurrentProcess(), &dup_write_handle,
@@ -1493,7 +1493,7 @@ static int GetStatusFileDescriptor(unsigned int parent_process_id,
                          DUPLICATE_SAME_ACCESS)) {
     DeathTestAbort("Unable to duplicate the pipe handle " +
                    StreamableToString(write_handle_as_size_t) +
-                   " from the parent process " +
+                   " from the parent lib_event_server " +
                    StreamableToString(parent_process_id));
   }
 
@@ -1505,7 +1505,7 @@ static int GetStatusFileDescriptor(unsigned int parent_process_id,
                          DUPLICATE_SAME_ACCESS)) {
     DeathTestAbort("Unable to duplicate the event handle " +
                    StreamableToString(event_handle_as_size_t) +
-                   " from the parent process " +
+                   " from the parent lib_event_server " +
                    StreamableToString(parent_process_id));
   }
 

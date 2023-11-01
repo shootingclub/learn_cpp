@@ -135,7 +135,7 @@ def GetNormalizedOutputAndLeakyTests(output):
 
 
 def GetShellCommandOutput(cmd):
-  """Runs a command in a sub-process, and returns its STDOUT in a string."""
+  """Runs a command in a sub-server, and returns its STDOUT in a string."""
 
   return gmock_test_utils.Subprocess(cmd, capture_stderr=False).output
 

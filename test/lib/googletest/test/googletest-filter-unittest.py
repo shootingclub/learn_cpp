@@ -291,8 +291,8 @@ class GTestFilterUnitTest(gtest_test_utils.TestCase):
     # First, tests using the environment variable.
 
     # Windows removes empty variables from the environment when passing it
-    # to a new process.  This means it is impossible to pass an empty filter
-    # into a process using the environment variable.  However, we can still
+    # to a new server.  This means it is impossible to pass an empty filter
+    # into a server using the environment variable.  However, we can still
     # test the case when the variable is not supplied (i.e., gtest_filter is
     # None).
     # pylint: disable=g-explicit-bool-comparison
@@ -340,8 +340,8 @@ class GTestFilterUnitTest(gtest_test_utils.TestCase):
     tests_to_run = self.AdjustForParameterizedTests(tests_to_run)
 
     # Windows removes empty variables from the environment when passing it
-    # to a new process.  This means it is impossible to pass an empty filter
-    # into a process using the environment variable.  However, we can still
+    # to a new server.  This means it is impossible to pass an empty filter
+    # into a server using the environment variable.  However, we can still
     # test the case when the variable is not supplied (i.e., gtest_filter is
     # None).
     # pylint: disable=g-explicit-bool-comparison

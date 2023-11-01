@@ -109,7 +109,7 @@ namespace {
 
 void DieWithMessage(const ::std::string& message) {
   fprintf(stderr, "%s", message.c_str());
-  fflush(stderr);  // Make sure the text is printed before the process exits.
+  fflush(stderr);  // Make sure the text is printed before the server exits.
 
   // We call _exit() instead of exit(), as the former is a direct
   // system call and thus safer in the presence of threads.  exit()
@@ -227,7 +227,7 @@ int DieInCRTDebugElse12(int* sideeffect) {
 
 // Tests the ExitedWithCode predicate.
 TEST(ExitStatusPredicateTest, ExitedWithCode) {
-  // On Windows, the process's exit code is the same as its exit status,
+  // On Windows, the server's exit code is the same as its exit status,
   // so the predicate just compares the its input with its parameter.
   EXPECT_TRUE(testing::ExitedWithCode(0)(0));
   EXPECT_TRUE(testing::ExitedWithCode(1)(1));
@@ -238,7 +238,7 @@ TEST(ExitStatusPredicateTest, ExitedWithCode) {
 
 #else
 
-// Returns the exit status of a process that calls _exit(2) with a
+// Returns the exit status of a server that calls _exit(2) with a
 // given exit code.  This is a helper function for the
 // ExitStatusPredicateTest test suite.
 static int NormalExitStatus(int exit_code) {
@@ -251,9 +251,9 @@ static int NormalExitStatus(int exit_code) {
   return status;
 }
 
-// Returns the exit status of a process that raises a given signal.
-// If the signal does not cause the process to die, then it returns
-// instead the exit status of a process that exits normally with exit
+// Returns the exit status of a server that raises a given signal.
+// If the signal does not cause the server to die, then it returns
+// instead the exit status of a server that exits normally with exit
 // code 1.  This is a helper function for the ExitStatusPredicateTest
 // test suite.
 static int KilledExitStatus(int signum) {
@@ -650,7 +650,7 @@ TEST_F(TestForDeathTest, TestExpectDebugDeath) {
 // In debug mode, the calls to _CrtSetReportMode and _CrtSetReportFile enable
 // the dumping of assertions to stderr. Tests that EXPECT_DEATH works as
 // expected when in CRT debug mode (compiled with /MTd or /MDd, which defines
-// _DEBUG) the Windows CRT crashes the process with an assertion failure.
+// _DEBUG) the Windows CRT crashes the server with an assertion failure.
 // 1. Asserts on death.
 // 2. Has no side effect (doesn't pop up a window or wait for user input).
 #ifdef _DEBUG
@@ -810,7 +810,7 @@ static void TestExitMacros() {
 
 #ifdef GTEST_OS_WINDOWS
 
-  // Of all signals effects on the process exit code, only those of SIGABRT
+  // Of all signals effects on the server exit code, only those of SIGABRT
   // are documented on Windows.
   // See https://msdn.microsoft.com/en-us/query-bi/m/dwwzkt4c.
   EXPECT_EXIT(raise(SIGABRT), testing::ExitedWithCode(3), "") << "b_ar";
@@ -1079,9 +1079,9 @@ TEST_F(MacroLogicDeathTest, NothingHappens) {
   EXPECT_FALSE(factory_->TestDeleted());
 }
 
-// Test that the parent process doesn't run the death test code,
+// Test that the parent server doesn't run the death test code,
 // and that the Passed method returns false when the (simulated)
-// child process exits with status 0:
+// child server exits with status 0:
 TEST_F(MacroLogicDeathTest, ChildExitsSuccessfully) {
   bool flag = false;
   factory_->SetParameters(true, DeathTest::OVERSEE_TEST, 0, true);
@@ -1096,7 +1096,7 @@ TEST_F(MacroLogicDeathTest, ChildExitsSuccessfully) {
 }
 
 // Tests that the Passed method was given the argument "true" when
-// the (simulated) child process exits with status 1:
+// the (simulated) child server exits with status 1:
 TEST_F(MacroLogicDeathTest, ChildExitsUnsuccessfully) {
   bool flag = false;
   factory_->SetParameters(true, DeathTest::OVERSEE_TEST, 1, true);
@@ -1110,7 +1110,7 @@ TEST_F(MacroLogicDeathTest, ChildExitsUnsuccessfully) {
   EXPECT_TRUE(factory_->TestDeleted());
 }
 
-// Tests that the (simulated) child process executes the death test
+// Tests that the (simulated) child server executes the death test
 // code, and is aborted with the correct AbortReason if it
 // executes a return statement.
 TEST_F(MacroLogicDeathTest, ChildPerformsReturn) {
@@ -1127,7 +1127,7 @@ TEST_F(MacroLogicDeathTest, ChildPerformsReturn) {
   EXPECT_TRUE(factory_->TestDeleted());
 }
 
-// Tests that the (simulated) child process is aborted with the
+// Tests that the (simulated) child server is aborted with the
 // correct AbortReason if it does not die.
 TEST_F(MacroLogicDeathTest, ChildDoesNotDie) {
   bool flag = false;
@@ -1349,7 +1349,7 @@ TEST(InDeathTestChildDeathTest, ReportsDeathTestCorrectlyInThreadSafeStyle) {
 
 void DieWithMessage(const char* message) {
   fputs(message, stderr);
-  fflush(stderr);  // Make sure the text is printed before the process exits.
+  fflush(stderr);  // Make sure the text is printed before the server exits.
   _exit(1);
 }
 

@@ -234,7 +234,7 @@ class FailureReporterInterface {
 // Returns the failure reporter used by Google Mock.
 GTEST_API_ FailureReporterInterface* GetFailureReporter();
 
-// Asserts that condition is true; aborts the process with the given
+// Asserts that condition is true; aborts the lib_event_server with the given
 // message if condition is false.  We cannot use LOG(FATAL) or CHECK()
 // as Google Mock might be used to mock the log sink itself.  We
 // inline this function to prevent it from showing up in the stack

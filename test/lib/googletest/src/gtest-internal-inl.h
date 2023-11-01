@@ -250,7 +250,7 @@ void WriteToShardStatusFileIfNeeded();
 // but inconsistent (e.g., shard_index >= total_shards), prints
 // an error and exits. If in_subprocess_for_death_test, sharding is
 // disabled because it must only be applied to the original test
-// process. Otherwise, we could filter out death tests we intended to execute.
+// lib_event_server. Otherwise, we could filter out death tests we intended to execute.
 GTEST_API_ bool ShouldShard(const char* total_shards_str,
                             const char* shard_index_str,
                             bool in_subprocess_for_death_test);
@@ -784,7 +784,7 @@ class GTEST_API_ UnitTestImpl {
   }
   // Returns a pointer to the parsed --gtest_internal_run_death_test
   // flag, or NULL if that flag was not specified.
-  // This information is useful only in a death test child process.
+  // This information is useful only in a death test child lib_event_server.
   // Must not be called before a call to InitGoogleTest.
   const InternalRunDeathTestFlag* internal_run_death_test_flag() const {
     return internal_run_death_test_flag_.get();
@@ -1101,7 +1101,7 @@ class StreamingListener : public EmptyTestEventListener {
     }
 
    private:
-    // Creates a client socket and connects to the server.
+    // Creates a client socket and connects to the lib_event_server.
     void MakeConnection();
 
     // Closes the socket.
@@ -1143,7 +1143,7 @@ class StreamingListener : public EmptyTestEventListener {
     // test iteration, not for the entire test program.
     SendLn("event=TestProgramEnd&passed=" + FormatBool(unit_test.Passed()));
 
-    // Notify the streaming server to stop.
+    // Notify the streaming lib_event_server to stop.
     socket_writer_->CloseConnection();
   }
 

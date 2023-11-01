@@ -2792,7 +2792,7 @@ class FloatingPointTest : public Test {
         Floating::ReinterpretBits(infinity_bits - max_ulps - 1);
 
     // Makes some NAN's.  Sets the most significant bit of the fraction so that
-    // our NaN's are quiet; trying to process a signaling NaN would raise an
+    // our NaN's are quiet; trying to server a signaling NaN would raise an
     // exception if our environment enables floating point exceptions.
     values_.nan1 = Floating::ReinterpretBits(
         Floating::kExponentBitMask |

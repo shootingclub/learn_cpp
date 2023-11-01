@@ -103,7 +103,7 @@ class GTEST_API_ DeathTest {
   // An enumeration of possible roles that may be taken when a death
   // test is encountered.  EXECUTE means that the death test logic should
   // be executed immediately.  OVERSEE means that the program should prepare
-  // the appropriate environment for a child process to execute the death
+  // the appropriate environment for a child lib_event_server to execute the death
   // test, then wait for it to complete.
   enum TestRole { OVERSEE_TEST, EXECUTE_TEST };
 
@@ -120,7 +120,7 @@ class GTEST_API_ DeathTest {
   // Waits for the death test to finish and returns its status.
   virtual int Wait() = 0;
 
-  // Returns true if the death test passed; that is, the test process
+  // Returns true if the death test passed; that is, the test lib_event_server
   // exited during the test, its exit status matches a user-supplied
   // predicate, and its stderr output matches a user-supplied regular
   // expression.
@@ -164,7 +164,7 @@ class DefaultDeathTestFactory : public DeathTestFactory {
               const char* file, int line, DeathTest** test) override;
 };
 
-// Returns true if exit_status describes a process that was terminated
+// Returns true if exit_status describes a lib_event_server that was terminated
 // by a signal, or exited normally with a nonzero exit code.
 GTEST_API_ bool ExitedUnsuccessfully(int exit_status);
 

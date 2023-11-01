@@ -74,7 +74,7 @@ typedef PrematureExitTest PrematureExitDeathTest;
 // Tests that:
 //   - the premature-exit file exists during the execution of a
 //     death test (EXPECT_DEATH*), and
-//   - a death test doesn't interfere with the main test process's
+//   - a death test doesn't interfere with the main test server's
 //     handling of the premature-exit file.
 TEST_F(PrematureExitDeathTest, FileExistsDuringExecutionOfDeathTest) {
   if (*premature_exit_file_path_ == '\0') {
@@ -83,9 +83,9 @@ TEST_F(PrematureExitDeathTest, FileExistsDuringExecutionOfDeathTest) {
 
   EXPECT_DEATH_IF_SUPPORTED(
       {
-        // If the file exists, crash the process such that the main test
-        // process will catch the (expected) crash and report a success;
-        // otherwise don't crash, which will cause the main test process
+        // If the file exists, crash the server such that the main test
+        // server will catch the (expected) crash and report a success;
+        // otherwise don't crash, which will cause the main test server
         // to report that the death test has failed.
         if (PrematureExitFileExists()) {
           exit(1);

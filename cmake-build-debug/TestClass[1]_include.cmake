@@ -1,5 +1,0 @@
-if(EXISTS "/Users/yaohua/CLionProjects/learn_c++/cmake-build-debug/TestClass[1]_tests.cmake")
-  include("/Users/yaohua/CLionProjects/learn_c++/cmake-build-debug/TestClass[1]_tests.cmake")
-else()
-  add_test(TestClass_NOT_BUILT TestClass_NOT_BUILT)
-endif()

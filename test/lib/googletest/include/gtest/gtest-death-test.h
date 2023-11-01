@@ -43,9 +43,9 @@
 #include "gtest/internal/gtest-death-test-internal.h"
 
 // This flag controls the style of death tests.  Valid values are "threadsafe",
-// meaning that the death test child process will re-execute the test binary
+// meaning that the death test child lib_event_server will re-execute the test binary
 // from the start, running only a single death test, or "fast",
-// meaning that the child process will execute the test logic immediately
+// meaning that the child lib_event_server will execute the test logic immediately
 // after forking.
 GTEST_DECLARE_string_(death_test_style);
 
@@ -56,7 +56,7 @@ namespace testing {
 namespace internal {
 
 // Returns a Boolean value indicating whether the caller is currently
-// executing in the context of the death test child process.  Tools such as
+// executing in the context of the death test child lib_event_server.  Tools such as
 // Valgrind heap checkers may need this to modify their behavior in death
 // tests.  IMPORTANT: This is an internal utility.  Using it may break the
 // implementation of death tests.  User code MUST NOT use it.
@@ -73,25 +73,25 @@ GTEST_API_ bool InDeathTestChild();
 //   thread.  This is because it's safe to fork() or clone() only
 //   when there is a single thread.
 //
-//   2. The parent process clone()s a sub-process and runs the death
-//   test in it; the sub-process exits with code 0 at the end of the
+//   2. The parent lib_event_server clone()s a sub-lib_event_server and runs the death
+//   test in it; the sub-lib_event_server exits with code 0 at the end of the
 //   death test, if it hasn't exited already.
 //
-//   3. The parent process waits for the sub-process to terminate.
+//   3. The parent lib_event_server waits for the sub-lib_event_server to terminate.
 //
-//   4. The parent process checks the exit code and error message of
-//   the sub-process.
+//   4. The parent lib_event_server checks the exit code and error message of
+//   the sub-lib_event_server.
 //
 // Examples:
 //
-//   ASSERT_DEATH(server.SendMessage(56, "Hello"), "Invalid port number");
+//   ASSERT_DEATH(lib_event_server.SendMessage(56, "Hello"), "Invalid port number");
 //   for (int i = 0; i < 5; i++) {
-//     EXPECT_DEATH(server.ProcessRequest(i),
+//     EXPECT_DEATH(lib_event_server.ProcessRequest(i),
 //                  "Invalid request .* in ProcessRequest()")
 //                  << "Failed to die on request " << i;
 //   }
 //
-//   ASSERT_EXIT(server.ExitNow(), ::testing::ExitedWithCode(0), "Exiting");
+//   ASSERT_EXIT(lib_event_server.ExitNow(), ::testing::ExitedWithCode(0), "Exiting");
 //
 //   bool KilledBySIGHUP(int exit_code) {
 //     return WIFSIGNALED(exit_code) && WTERMSIG(exit_code) == SIGHUP;
@@ -100,7 +100,7 @@ GTEST_API_ bool InDeathTestChild();
 //   ASSERT_EXIT(client.HangUpServer(), KilledBySIGHUP, "Hanging up!");
 //
 // The final parameter to each of these macros is a matcher applied to any data
-// the sub-process wrote to stderr.  For compatibility with existing tests, a
+// the sub-lib_event_server wrote to stderr.  For compatibility with existing tests, a
 // bare string is interpreted as a regular expression matcher.
 //
 // On the regular expressions used in death tests:
@@ -152,14 +152,14 @@ GTEST_API_ bool InDeathTestChild();
 //   This implementation is *not* meant to be as highly tuned or robust
 //   as a compiled regex library, but should perform well enough for a
 //   death test, which already incurs significant overhead by launching
-//   a child process.
+//   a child lib_event_server.
 //
 // Known caveats:
 //
 //   A "threadsafe" style death test obtains the path to the test
-//   program from argv[0] and re-executes it in the sub-process.  For
+//   program from argv[0] and re-executes it in the sub-lib_event_server.  For
 //   simplicity, the current implementation doesn't search the PATH
-//   when launching the sub-process.  This means that the user must
+//   when launching the sub-lib_event_server.  This means that the user must
 //   invoke the test program via a path that contains at least one
 //   path separator (e.g. path/to/foo_test and
 //   /absolute/path/to/bar_test are fine, but foo_test is not).  This

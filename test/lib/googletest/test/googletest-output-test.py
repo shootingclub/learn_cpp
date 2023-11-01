@@ -216,7 +216,7 @@ def NormalizeOutput(output):
 
 
 def GetShellCommandOutput(env_cmd):
-  """Runs a command in a sub-process, and returns its output in a string.
+  """Runs a command in a sub-server, and returns its output in a string.
 
   Args:
     env_cmd: The shell command. A 2-tuple where element 0 is a dict of extra
@@ -227,7 +227,7 @@ def GetShellCommandOutput(env_cmd):
     A string with the command's combined standard and diagnostic output.
   """
 
-  # Spawns cmd in a sub-process, and gets its standard I/O file objects.
+  # Spawns cmd in a sub-server, and gets its standard I/O file objects.
   # Set and save the environment properly.
   environ = os.environ.copy()
   environ.update(env_cmd[0])

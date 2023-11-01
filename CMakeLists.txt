@@ -20,22 +20,21 @@
 #target_link_libraries(module)
 
 cmake_minimum_required(VERSION 3.26)
-project(learn_c++)
-
+project(learn_cpp)
 set(CMAKE_CXX_STANDARD 14)
-#set(INCLUDE_DIRS /usr/local/)
-#include_directories(${INCLUDE_DIRS}/gtest/googletest/include/)
 
-#set(SOURCE_FILES main.cpp
-#        Google_tests/AbsoluteDateTest.cpp
-#)
-#add_executable(DateConverter_run ${SOURCE_FILES})
+
+#set(INCLUDE_DIRS /usr/local/)
+#include_directories(${INCLUDE_DIRS}/libevent-2.1.8/include)
+#link_directories(${INCLUDE_DIRS}/libevent-2.1.8/lib)
+
+
+add_executable(learn_cpp main.cpp)
 
 include_directories(module)
 add_subdirectory(module)
 add_subdirectory(test)
-target_link_libraries(module)
-
-
-
-
+target_link_libraries(learn_cpp
+        module
+        #        event
+)

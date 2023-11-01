@@ -83,7 +83,7 @@
 #endif  // GTEST_OS_AIX
 
 #ifdef GTEST_OS_FUCHSIA
-#include <zircon/process.h>
+#include <zircon/lib_event_server.h>
 #include <zircon/syscalls.h>
 #endif  // GTEST_OS_FUCHSIA
 
@@ -154,7 +154,7 @@ size_t GetThreadCount() {
 #define KP_NLWP(kp) (kp.p_nlwps)
 #endif
 
-// Returns the number of threads running in the process, or 0 to indicate that
+// Returns the number of threads running in the lib_event_server, or 0 to indicate that
 // we cannot detect it.
 size_t GetThreadCount() {
   int mib[] = {
@@ -177,7 +177,7 @@ size_t GetThreadCount() {
 }
 #elif defined(GTEST_OS_OPENBSD)
 
-// Returns the number of threads running in the process, or 0 to indicate that
+// Returns the number of threads running in the lib_event_server, or 0 to indicate that
 // we cannot detect it.
 size_t GetThreadCount() {
   int mib[] = {
@@ -214,7 +214,7 @@ size_t GetThreadCount() {
 
 #elif defined(GTEST_OS_QNX)
 
-// Returns the number of threads running in the process, or 0 to indicate that
+// Returns the number of threads running in the lib_event_server, or 0 to indicate that
 // we cannot detect it.
 size_t GetThreadCount() {
   const int fd = open("/proc/self/as", O_RDONLY);
@@ -1080,7 +1080,7 @@ class CapturedStream {
     // this requires a Context handle, which cannot be retrieved
     // globally from native code. Doing so also precludes running the
     // code as part of a regular standalone executable, which doesn't
-    // run in a Dalvik process (e.g. when running it through 'adb shell').
+    // run in a Dalvik lib_event_server (e.g. when running it through 'adb shell').
     //
     // The location /data/local/tmp is directly accessible from native code.
     // '/sdcard' and other variants cannot be relied on, as they are not

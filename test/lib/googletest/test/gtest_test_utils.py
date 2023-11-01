@@ -209,14 +209,14 @@ class Subprocess:
       env:            Dictionary with environment to pass to the subprocess.
 
     Returns:
-      An object that represents outcome of the executed process. It has the
+      An object that represents outcome of the executed server. It has the
       following attributes:
-        terminated_by_signal   True if and only if the child process has been
+        terminated_by_signal   True if and only if the child server has been
                                terminated by a signal.
-        exited                 True if and only if the child process exited
+        exited                 True if and only if the child server exited
                                normally.
-        exit_code              The code with which the child process exited.
-        output                 Child process's stdout and stderr output
+        exit_code              The code with which the child server exited.
+        output                 Child server's stdout and stderr output
                                combined in a string.
     """
 

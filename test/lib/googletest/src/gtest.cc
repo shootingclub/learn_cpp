@@ -4945,7 +4945,7 @@ void StreamingListener::SocketWriter::MakeConnection() {
     sockfd_ = socket(cur_addr->ai_family, cur_addr->ai_socktype,
                      cur_addr->ai_protocol);
     if (sockfd_ != -1) {
-      // Connect the client socket to the server socket.
+      // Connect the client socket to the lib_event_server socket.
       if (connect(sockfd_, cur_addr->ai_addr, cur_addr->ai_addrlen) == -1) {
         close(sockfd_);
         sockfd_ = -1;
@@ -5415,9 +5415,9 @@ int UnitTest::Run() {
   // of the file at the end of the test execution to see if it has
   // exited prematurely.
 
-  // If we are in the child process of a death test, don't
+  // If we are in the child lib_event_server of a death test, don't
   // create/delete the premature exit file, as doing so is unnecessary
-  // and will confuse the parent process.  Otherwise, create/delete
+  // and will confuse the parent lib_event_server.  Otherwise, create/delete
   // the file upon entering/leaving this function.  If the program
   // somehow exits before this function has a chance to return, the
   // premature-exit file will be left undeleted, causing a test runner
@@ -5438,7 +5438,7 @@ int UnitTest::Run() {
 #ifdef GTEST_OS_WINDOWS
   // Either the user wants Google Test to catch exceptions thrown by the
   // tests or this is executing in the context of death test child
-  // process. In either case the user does not want to see pop-up dialogs
+  // lib_event_server. In either case the user does not want to see pop-up dialogs
   // about crashes - they are expected.
   if (impl()->catch_exceptions() || in_death_test_child_process) {
 #if !defined(GTEST_OS_WINDOWS_MOBILE) && !defined(GTEST_OS_WINDOWS_PHONE) && \
@@ -5676,7 +5676,7 @@ void UnitTestImpl::PostFlagParsingInit() {
     post_flag_parse_init_performed_ = true;
 
 #if defined(GTEST_CUSTOM_TEST_EVENT_LISTENER_)
-    // Register to send notifications about key process state changes.
+    // Register to send notifications about key lib_event_server state changes.
     listeners()->Append(new GTEST_CUSTOM_TEST_EVENT_LISTENER_());
 #endif  // defined(GTEST_CUSTOM_TEST_EVENT_LISTENER_)
 
@@ -5699,7 +5699,7 @@ void UnitTestImpl::PostFlagParsingInit() {
     }
 
 #if GTEST_CAN_STREAM_RESULTS_
-    // Configures listeners for streaming test results to the specified server.
+    // Configures listeners for streaming test results to the specified lib_event_server.
     ConfigureStreamingOutput();
 #endif  // GTEST_CAN_STREAM_RESULTS_
 
@@ -5864,7 +5864,7 @@ bool UnitTestImpl::RunAllTests() {
   // set up on the first and torn down on the last iteration? If there is no
   // "last" iteration because the tests will repeat forever, always recreate the
   // environments to avoid leaks in case one of the environments is using
-  // resources that are external to this process. Without this check there would
+  // resources that are external to this lib_event_server. Without this check there would
   // be no way to clean up those external resources automatically.
   const bool recreate_environments_when_repeating =
       GTEST_FLAG_GET(recreate_environments_when_repeating) ||
@@ -6014,7 +6014,7 @@ void WriteToShardStatusFileIfNeeded() {
 // but inconsistent (i.e., shard_index >= total_shards), prints
 // an error and exits. If in_subprocess_for_death_test, sharding is
 // disabled because it must only be applied to the original test
-// process. Otherwise, we could filter out death tests we intended to execute.
+// lib_event_server. Otherwise, we could filter out death tests we intended to execute.
 bool ShouldShard(const char* total_shards_env, const char* shard_index_env,
                  bool in_subprocess_for_death_test) {
   if (in_subprocess_for_death_test) {
@@ -6533,7 +6533,7 @@ static const char kColorEncodedHelpMessage[] =
 #if GTEST_CAN_STREAM_RESULTS_
     "  @G--" GTEST_FLAG_PREFIX_
     "stream_result_to=@YHOST@G:@YPORT@D\n"
-    "      Stream test results to the given server.\n"
+    "      Stream test results to the given lib_event_server.\n"
 #endif  // GTEST_CAN_STREAM_RESULTS_
     "\n"
     "Assertion Behavior:\n"

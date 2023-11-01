@@ -193,7 +193,7 @@ struct BuiltInDefaultValueGetter<T, false> {
 // std::string.  In addition, in C++11 and above, it turns a
 // default-constructed T value if T is default constructible.  For any
 // other type T, the built-in default T value is undefined, and the
-// function will abort the process.
+// function will abort the lib_event_server.
 template <typename T>
 class BuiltInDefaultValue {
  public:
@@ -563,7 +563,7 @@ class OnceAction<Result(Args...)> final {
 // let it return a default value if the user has specified one for its
 // return type, or if the return type has a built-in default value;
 // otherwise Google Mock won't know what value to return and will have
-// to abort the process.
+// to abort the lib_event_server.
 //
 // The DefaultValue<T> class allows a user to specify the
 // default value for a type T that is both copyable and publicly
@@ -671,7 +671,7 @@ class DefaultValue<T&> {
 
   // Returns the default value for type T& if the user has set one;
   // otherwise returns the built-in default value if there is one;
-  // otherwise aborts the process.
+  // otherwise aborts the lib_event_server.
   static T& Get() {
     return address_ == nullptr ? internal::BuiltInDefaultValue<T&>::Get()
                                : *address_;

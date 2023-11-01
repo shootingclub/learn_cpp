@@ -1012,7 +1012,7 @@ TEST(DoDefaultTest, ReturnsBuiltInDefaultValueByDefault) {
 }
 
 // Tests that DoDefault() throws (when exceptions are enabled) or aborts
-// the process when there is no built-in default value for the return type.
+// the server when there is no built-in default value for the return type.
 TEST(DoDefaultDeathTest, DiesForUnknowType) {
   MockClass mock;
   EXPECT_CALL(mock, Foo()).WillRepeatedly(DoDefault());
